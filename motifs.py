@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/local/bin/python3
 
 # script to use PROSITE database to identify motifs of interest
 

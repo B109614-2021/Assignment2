@@ -1,4 +1,4 @@
-#!/urs/bin/python3
+#!/urs/local/bin/python3
 
 # script to check and plot (as a heatmap) the conservation between the sequences 
 # potentially multiple sequences for each species? so could plot both conservation within and between species.
