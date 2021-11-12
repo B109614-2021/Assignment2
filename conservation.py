@@ -17,3 +17,5 @@
 
 # as the sequences are large, may use clustalo to align
 # plotcon can be used to plot the conservation  
+
+# pd.read_csv() to read as dataframe. Very similar to R! pandas is basically R for python

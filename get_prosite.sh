@@ -9,3 +9,8 @@
 # need to save output in a different format.
 
 # then grep for motifs, count up number of motifs and produce both a file showing what motifs occur on each sequence, and a bar plot of the most common.
+
+
+# can run wget throuhg python, and specify output with -O. for example subprocess.call('wget -qO eukaryotes.txt "ftp://ftp.ncbi.nlm.nih.gov/genomes/GENOME_REPORTS/eukaryotes.txt" ' , shell=True)
+
+# use os.system to run bash commandline commands
