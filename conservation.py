@@ -4,21 +4,45 @@
 
 import sys
 import os
-import numbpy as np
+import numpy as np
 import pandas as pd
+
+input_file = ["input.fasta"]
 
 # script to check and plot (as a heatmap) the conservation between the sequences 
 # potentially multiple sequences for each species? so could plot both conservation within a species.
 
-# To check conservation, use numpy to create a matrix (Lecture 13, conditionals). Find percent conservation between sequences and make a heatmap. label with species
+# check: does input file exist with try and except. if file does not exist, exit and return error. 
 
-# check: does input files exist
-# check: does it have more than one sequence
-# check: does it have fewer than 1000 sequences? if so, give user the choice to either use first N sequences or exit (check they give an int less than 1001 or the string "exit")
+for file in input_file		:
+	try:
+
+		with open(file) as my_file:
+     			fasta_data = my_file.read()
+
+	except IOError:
+
+		print('Error: ' + file + ' does not exist.' + ' Exiting pipeline.')
+		quit()
+
+# create a list, each item being a sequence with its header 
+
+sequences = fasta_data.split('>')
+
+# check there is at least one sequence, and if there more than 1000, only use the first 1000.  
+
+if len(sequences) < 1	:
+	print("Error: No sequences detected in " + input_file + ". Exiting pipeline.")
+	quit
+
+if len(sequences) > 1000	:
+	print("There are too many in this protein family for this subgroup, so using only the first 1000")
+
+
+# To check conservation, use numpy to create a matrix (Lecture 13, conditionals). Find percent conservation between sequences and make a heatmap. label with species
 
 # I think /localdisk/data/BPSM/Assignment2/pullseq can extract sequneces, so could be used to extract the desired number of sequences
 
-# take input fasta file, and split into a list; one item for each sequence. (could potentiall make list of lists?)
 # split into list for species, so get unique species names occuring in the list of lists, make a object for each species, containing all sequences
 
 
