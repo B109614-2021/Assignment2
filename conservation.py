@@ -1,5 +1,12 @@
 #!/urs/local/bin/python3
 
+# import packages 
+
+import sys
+import os
+import numbpy as np
+import pandas as pd
+
 # script to check and plot (as a heatmap) the conservation between the sequences 
 # potentially multiple sequences for each species? so could plot both conservation within a species.
 
@@ -19,3 +26,4 @@
 # plotcon can be used to plot the conservation  
 
 # pd.read_csv() to read as dataframe. Very similar to R! pandas is basically R for python
+
