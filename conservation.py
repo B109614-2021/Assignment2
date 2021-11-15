@@ -41,6 +41,8 @@ if len(sequences) > 1000	:
 
 # To check conservation, use numpy to create a matrix (Lecture 13, conditionals). Find percent conservation between sequences and make a heatmap. label with species
 
+# check that Amino acids match the amino acid codes. if any dont, then change to X
+
 # I think /localdisk/data/BPSM/Assignment2/pullseq can extract sequneces, so could be used to extract the desired number of sequences
 
 # split into list for species, so get unique species names occuring in the list of lists, make a object for each species, containing all sequences
