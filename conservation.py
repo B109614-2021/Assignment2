@@ -29,28 +29,24 @@ for file in input_file		:
 
 sequences = fasta_data.split('>')
 
-# check there is at least one sequence, and if there more than 1000, only use the first 1000.  
-
-if len(sequences) < 1	:
-	print("Error: No sequences detected in " + input_file + ". Exiting pipeline.")
-	quit
-
-if len(sequences) > 1000	:
-	print("There are too many in this protein family for this subgroup, so using only the first 1000")
-
-
 # To check conservation, use numpy to create a matrix (Lecture 13, conditionals). Find percent conservation between sequences and make a heatmap. label with species
 
 # check that Amino acids match the amino acid codes. if any dont, then change to X
 # regular expressions, find amono acids that are not in the expected letters, change wrong letters to X
 
 # I think /localdisk/data/BPSM/Assignment2/pullseq can extract sequneces, so could be used to extract the desired number of sequences
-
 # split into list for species, so get unique species names occuring in the list of lists, make a object for each species, containing all sequences
 
 
 # as the sequences are large, may use clustalo to align
-# plotcon can be used to plot the conservation  
+# plotcon can be used to plot the conservation
+# plotcon -sequences aligned_test.fasta  -graph x11 
+# produces a line graph showing the regions with high conservation
 
 # pd.read_csv() to read as dataframe. Very similar to R! pandas is basically R for python
+
+
+# clustalo -i test.fasta -o aligned_test.fasta -v produces alignment file, can have set max number of sequences and max sequence length
+
+# clustalo --percent-id --full-iter -i test.fasta -o aligned_test.fasta -v --force --clustering-out=cluster.txt. percent id doesnt seem to do anything, cluster.txt is confusing 
 

@@ -45,7 +45,16 @@ os.mkdir('temp')
 # esearch -db protein -query "$protein AND $subgroup [ORGN]" |efetch -format fasta > "$subgroup"_"$protein".fasta
 # by inserting the python variables
 
-esearch_command = "esearch -db protein -query \"" + protein + " AND " + subgroup + " [ORGN]\" |efetch -format fasta >  temp/" + subgroup + "_" + protein + ".fasta"
+# check how many sequences there are. doing this before downloading sequneces prevents the user from downloading millions of sequences 
+# esearch -db protein -query "glucose-6-phosphatase [PROTEIN] AND aves [ORGN]" |efetch -format uid | wc -l
+# tell users how many sequences have been found
+
+# if 0 sequences are found, tell the user and end the process
+# if more than 1000 sequences found, tell the user and ask them if they want to procees
+# if more than 5000 sequences found, tell the user to be more specific. request may be too general. 
+
+
+esearch_command = "esearch -db protein -query \"" + protein + " [PROTEIN] AND " + subgroup + " [ORGN]\" |efetch -format fasta >  temp/" + subgroup + "_" + protein + ".fasta"
 
 # tell the user what they are searching for, maybe they spot a spelling mistake 
 
