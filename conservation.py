@@ -34,6 +34,8 @@ for file in input_file		:
 # resave to new file, which is then used for clustalo for alignment and then checking which regions are conserved.
 
 
+# maybe filter sequences to remove partial sequences
+
 # as the sequences are large, may use clustalo to align
 # plotcon can be used to plot the conservation
 # plotcon -sequences aligned_test.fasta -graph svg probably best.  
@@ -45,7 +47,9 @@ for file in input_file		:
 
 # clustalo --percent-id --full-iter -i test.fasta -o aligned_test.fasta -v --force --clustering-out=cluster.txt. percent id doesnt seem to do anything, cluster.txt is confusing 
 
-# plotcon -sequences aligned_test.fasta -graph svg -winsize (find best window size) 
+# plotcon -sequences aligned_test.fasta -winsize 10 -graph svg. winsize 10 makes nicer looking graph than smaller numbers, but still contains information  
+
+# need to return to screen as well as an svg
 # add graph variables to make pretty 
 # "-graph" associated qualifiers
 #   -gprompt            boolean    Graph prompting
