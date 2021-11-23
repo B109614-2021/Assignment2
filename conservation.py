@@ -2,6 +2,7 @@
 
 # import packages 
 
+import string
 import sys
 import os
 import numpy as np
@@ -33,27 +34,37 @@ except IOError:
 fasta_data_list = fasta_data.split(">")
 
 # print(fasta_data_list)
+# need to re add ">" to the start of sequences 
+
 
 ### split into partial, predicted and full sequences
 
+# create new fasta files
+
+my_outfile_partial = open("partial_sequences.fasta", "w")
+my_outfile_predicted = open("predicted_sequences.fasta", "w")
+my_outfile_complete = open("complete_sequences.fasta", "w")
+
 for sequence in fasta_data_list	:
-	print(sequence) 
+	sequence.replace(">", "")
+	sequence = ">" + sequence
+	# print(sequence) 
 	if("partial" in sequence):
-		print("is a partial sequence")
-		my_outfile = open("partial_sequences.fasta", "w")
-		my_outfile.write(sequence)
+	# 	print("is a partial sequence")
+		my_outfile_partial.write(sequence)
 	elif("PREDICTED" in sequence):
-		print("is a predicted sequence")
-		my_outfile = open("predicted_sequences.fasta", "w")
-		my_outfile.write(sequence)
+	# 	print("is a predicted sequence")
+		my_outfile_predicted.write(sequence)
 
 	else:
-		print("is a complete sequnece")
-		my_outfile = open("complete_sequences.fasta", "w")
-		my_outfile.write(sequence)
+	#	print("is a complete sequnece")
+		my_outfile_complete.write(sequence)
 
+my_outfile_partial.close()
+my_outfile_predicted.close()
+my_outfile_complete.close()
 
-# maybe filter sequences to remove partial or predicted sequences, as partial sequences will mess up the alignment, resave file and use for clustalo 
+### desired file (likely complete) can be used for clustalo
 
 # use clustalo to align
 # plotcon can be used to plot the conservation
