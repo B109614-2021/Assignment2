@@ -72,6 +72,11 @@ my_outfile_complete.close()
 # produces a line graph showing the regions with high conservation
 
 ### need to put in python script os.systemcall()
+### need to make general
+### need to let user pick whether they want to use complete, partial or predicted
+### need to check for species number and ask user if they want to check within or between species (why not both!)
+### need to pass variables from one script to another
+
 
 # clustalo -i test.fasta -o aligned_test.fasta -v produces alignment file, can have set max number of sequences and max sequence length
 
