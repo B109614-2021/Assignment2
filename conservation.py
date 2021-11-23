@@ -9,25 +9,16 @@ import pandas as pd
 
 input_file = ["input.fasta"]
 
-# script to check and plot (as a heatmap) the conservation between the sequences 
-# potentially multiple sequences for each species? so could plot both conservation within a species.
-
 # check: does input file exist with try and except. if file does not exist, exit and return error. 
 
-for file in input_file		:
-	try:
+try:
+	with open(file) as my_file:
+     		fasta_data = my_file.read()
 
-		with open(file) as my_file:
-     			fasta_data = my_file.read()
+except IOError:
 
-	except IOError:
-
-		print('Error: ' + file + ' does not exist.' + ' Exiting pipeline.')
-		quit()
-
-# create a list, each item being a sequence with its header 
-
-# To check conservation, use numpy to create a matrix (Lecture 13, conditionals). Find percent conservation between sequences and make a heatmap. label with species
+	print('Error: ' + file + ' does not exist.' + ' Exiting pipeline.')
+	quit()
 
 # check that Amino acids match the amino acid codes. if any dont, then change to X
 # regular expressions, find amono acids that are not in the expected letters, change wrong letters to X
@@ -36,12 +27,12 @@ for file in input_file		:
 
 # maybe filter sequences to remove partial sequences
 
-# as the sequences are large, may use clustalo to align
+# use clustalo to align
 # plotcon can be used to plot the conservation
 # plotcon -sequences aligned_test.fasta -graph svg probably best.  
 # produces a line graph showing the regions with high conservation
 
-# need to put in python script os.systemcall()
+### need to put in python script os.systemcall()
 
 # clustalo -i test.fasta -o aligned_test.fasta -v produces alignment file, can have set max number of sequences and max sequence length
 

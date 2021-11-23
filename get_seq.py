@@ -27,26 +27,29 @@ os.mkdir('temp')
 
 ### read in variables and test
 
-# regular expresssion, \d means digit. \D is non digit. check there is at least 1 non digit?
-
 # get subgroup
 
 subgroup = input("please enter subgroup of interest:")
 
-# check that subgroup is a string
-# keeps harassing the user until they enter some sort of string  
+# print(subgroup)
 
-while(re.search(r'\D', subgroup) != True or len(subgroup) < 1)	:
+# check that subgroup contains a non digit and has a length of at least 1
+# keeps harassing the user until they enter some sort of string
+# re.search will return a re.Match object if the pattern is found 
+
+while(type(re.search(r'\D', subgroup)) != re.Match or len(subgroup) < 1)	:
         subgroup = input("variable subgroup must contain alphabetic characters, enter an organism or subgroup:")
 
 # get protein
 
 protein = input("please enter protein family of interest:")
 
-# check that protein is a string
+# print(protein)
+
+# check that protein contains a non digit, and has a length of at least 1
 # keep harassing the user until something is entered 
 
-while(re.search(r'\D', protein) != True or len(protein) < 1)       :
+while(type(re.search(r'\D', protein)) != re.Match or len(protein) < 1)       :
         protein = input("variable protein must contain alphabetic characters, enter a protein family:")
 
 # get window size parameter for conservation as a variable, check it is a number, recommend 10
@@ -69,27 +72,29 @@ esearch_seq_number_command = "esearch -db protein -query \"" + protein + " [PROT
 
 try:
         os.system(esearch_seq_number_command)
-        sequences_found = subprocess.call(esearch_seq_number_command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        sequences_found = subprocess.check_output(esearch_seq_number_command, shell=True)
 except OSError as e:
         # insert more descriptive error
         print("Error: esearch returned error")
+
+sequences_found = sequences_found.decode().replace("\n","")
 
 print('search found ' + sequences_found + " sequences")
 
 # if 0 sequences are found, tell the user and end the process
 
-if sequences_found == 0	:
+if int(sequences_found) == 0	:
 	print("No sequences found")
 	# exit pipeline
 
 # if more than 1000 sequences found, but not too many more, warn the user 
 
-if sequences_found > 1000 & sequences_found < 2000	:
-	print("warning: more than 1000 sequences identifed, query may be too general"
+if int(sequences_found) > 1000 and int(sequences_found) < 2000	:
+	print("warning: more than 1000 sequences identifed, query may be too general")
 
 # if more than 2000 sequences found, tell the user to be more specific. request may be too general.
 
-if sequences_found >= 2000	:
+if int(sequences_found) >= 2000:
 	print("To many sequences, exiting program")
 	# exit pipeline
 
@@ -104,7 +109,7 @@ esearch_command = "esearch -db protein -query \"" + protein + " [PROTEIN] AND " 
 # run the command in python, check for errors
 try:
 	os.system(esearch_command)
-	subprocess.call(esearch_command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+	subprocess.call(esearch_command, shell=True)
 except OSError as e:
 	# insert more descriptive error
         print("Error: esearch returned error")
@@ -118,7 +123,10 @@ if os.stat(input_file_name).st_size == 0:
 	# exit pipeline if file is empty
 # elif check the fist line of the file has >, indicating a fasta file
 else	:
-	print("Sequences downloaded, beginning processing") 
+	print("Sequences downloaded") 
 
 
-# call other scripts
+### list the species in the dataset 
+
+
+### other checks
