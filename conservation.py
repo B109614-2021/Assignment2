@@ -7,12 +7,13 @@ import os
 import numpy as np
 import pandas as pd
 
-input_file = ["input.fasta"]
+input_file = "temp/aves_glucose-6-phosphatase.fasta"
 
+# print(input_file)
 # check: does input file exist with try and except. if file does not exist, exit and return error. 
 
 try:
-	with open(file) as my_file:
+	with open(input_file) as my_file:
      		fasta_data = my_file.read()
 
 except IOError:
@@ -24,8 +25,35 @@ except IOError:
 # regular expressions, find amono acids that are not in the expected letters, change wrong letters to X
 # resave to new file, which is then used for clustalo for alignment and then checking which regions are conserved.
 
+# print(fasta_data)
 
-# maybe filter sequences to remove partial sequences
+# print(type(fasta_data))
+# fasta_data is a string, split into a list where > occurs using .split, so each header and sequence is a different object
+
+fasta_data_list = fasta_data.split(">")
+
+# print(fasta_data_list)
+
+### split into partial, predicted and full sequences
+
+for sequence in fasta_data_list	:
+	print(sequence) 
+	if("partial" in sequence):
+		print("is a partial sequence")
+		my_outfile = open("partial_sequences.fasta", "w")
+		my_outfile.write(sequence)
+	elif("PREDICTED" in sequence):
+		print("is a predicted sequence")
+		my_outfile = open("predicted_sequences.fasta", "w")
+		my_outfile.write(sequence)
+
+	else:
+		print("is a complete sequnece")
+		my_outfile = open("complete_sequences.fasta", "w")
+		my_outfile.write(sequence)
+
+
+# maybe filter sequences to remove partial or predicted sequences, as partial sequences will mess up the alignment, resave file and use for clustalo 
 
 # use clustalo to align
 # plotcon can be used to plot the conservation

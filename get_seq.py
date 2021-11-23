@@ -59,6 +59,9 @@ con_window_size = input("please enter a desired window size for conservation plo
 # check this is an int
 # keep harassing user until something is entered 
 
+while(type(con_window_size) != int or length(con_window_size < 1):
+	con_window_size = input("please enter an interger for the window size of the conservation plot:")
+
 # Tell the user what they are searching for so they can maybe spot spelling mistakes
 
 print("Searching for " + protein + " in " + subgroup )
@@ -76,6 +79,7 @@ try:
 except OSError as e:
         # insert more descriptive error
         print("Error: esearch returned error")
+	quit()
 
 sequences_found = sequences_found.decode().replace("\n","")
 
@@ -85,18 +89,18 @@ print('search found ' + sequences_found + " sequences")
 
 if int(sequences_found) == 0	:
 	print("No sequences found")
-	# exit pipeline
+	quit()
 
 # if more than 1000 sequences found, but not too many more, warn the user 
 
-if int(sequences_found) > 1000 and int(sequences_found) < 2000	:
+if int(sequences_found) > 1000 and int(sequences_found) < 1500	:
 	print("warning: more than 1000 sequences identifed, query may be too general")
 
 # if more than 2000 sequences found, tell the user to be more specific. request may be too general.
 
-if int(sequences_found) >= 2000:
+if int(sequences_found) >= 1500:
 	print("To many sequences, exiting program")
-	# exit pipeline
+	quit()
 
 ### search for protein sequences
 
@@ -113,6 +117,7 @@ try:
 except OSError as e:
 	# insert more descriptive error
         print("Error: esearch returned error")
+	quit()
 
 # check if file is empty, indicating a problem with esearch, return an error is possible
 
@@ -120,7 +125,8 @@ input_file_name =  "temp/" + subgroup + "_" + protein + ".fasta"
 
 if os.stat(input_file_name).st_size == 0:
 	print("No sequences found for " + protein + " in " + subgroup)
-	# exit pipeline if file is empty
+	quit()
+
 # elif check the fist line of the file has >, indicating a fasta file
 else	:
 	print("Sequences downloaded") 
