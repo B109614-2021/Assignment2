@@ -10,15 +10,26 @@ import sys
 import subprocess
 import shutil
 
-# section to read in variables 
-# regular expresssion, \d means digit. \D is non digit. check there is at least 1 non digit?
+### housekeeping, check for and remove relevant directories, and remake
 
+# remove relevant directories if they exist 
 
 try:
     shutil.rmtree('temp')
 except OSError as e:
-	# it is likely that temp does not exist, so don't want error to break the pipeline 
-	print("Error: %s : %s" % ('temp', e.strerror))
+        # it is likely that temp does not exist, so don't want error to break the pipeline
+        print("Error: %s : %s" % ('temp', e.strerror)) 
+
+# create a directory to save temporary files in, so it is tidy and users can access different stages.
+
+os.mkdir('temp')
+
+
+### read in variables and test
+
+# regular expresssion, \d means digit. \D is non digit. check there is at least 1 non digit?
+
+# get subgroup
 
 subgroup = input("please enter subgroup of interest:")
 
@@ -28,6 +39,7 @@ subgroup = input("please enter subgroup of interest:")
 while(re.search(r'\D', subgroup) != True or len(subgroup) < 1)	:
         subgroup = input("variable subgroup must contain alphabetic characters, enter an organism or subgroup:")
 
+# get protein
 
 protein = input("please enter protein family of interest:")
 
@@ -37,34 +49,59 @@ protein = input("please enter protein family of interest:")
 while(re.search(r'\D', protein) != True or len(protein) < 1)       :
         protein = input("variable protein must contain alphabetic characters, enter a protein family:")
 
-# create a directory to save temporary files in, so it is tidy and users can access different stages.
+# get window size parameter for conservation as a variable, check it is a number, recommend 10
 
-os.mkdir('temp')
+con_window_size = input("please enter a desired window size for conservation plot:")
 
-# big horrible to look at text that is basically trying to make:
-# esearch -db protein -query "$protein AND $subgroup [ORGN]" |efetch -format fasta > "$subgroup"_"$protein".fasta
-# by inserting the python variables
+# check this is an int
+# keep harassing user until something is entered 
 
-# check how many sequences there are. doing this before downloading sequneces prevents the user from downloading millions of sequences 
-# esearch -db protein -query "glucose-6-phosphatase [PROTEIN] AND aves [ORGN]" |efetch -format uid | wc -l
-# tell users how many sequences have been found
-
-# if 0 sequences are found, tell the user and end the process
-# if more than 1000 sequences found, tell the user and ask them if they want to procees
-# if more than 5000 sequences found, tell the user to be more specific. request may be too general. 
-
-
-esearch_command = "esearch -db protein -query \"" + protein + " [PROTEIN] AND " + subgroup + " [ORGN]\" |efetch -format fasta >  temp/" + subgroup + "_" + protein + ".fasta"
-
-# tell the user what they are searching for, maybe they spot a spelling mistake 
+# Tell the user what they are searching for so they can maybe spot spelling mistakes
 
 print("Searching for " + protein + " in " + subgroup )
 
-# run the command in python, check for errors
-#### FIX THIS, ERRORS getting through as esearch tries multiple times. maybe use quietly 
-# this is done quietly. it is possible that an errors will be printed to the screen as part of subprocess
-# these will be picked up as the output file will be empty
+### Check the number of found sequences
 
+# check how many sequences there are. doing this before downloading sequneces prevents the user from downloading millions of sequences 
+# tell users how many sequences have been found, if there are 0; stop, if there are > 1000; produce a warning, if greater than 2000, stop
+
+esearch_seq_number_command = "esearch -db protein -query \"" + protein + " [PROTEIN] AND " + subgroup + " [ORGN]\" |efetch -format uid | wc -l"
+
+try:
+        os.system(esearch_seq_number_command)
+        sequences_found = subprocess.call(esearch_seq_number_command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+except OSError as e:
+        # insert more descriptive error
+        print("Error: esearch returned error")
+
+print('search found ' + sequences_found + " sequences")
+
+# if 0 sequences are found, tell the user and end the process
+
+if sequences_found == 0	:
+	print("No sequences found")
+	# exit pipeline
+
+# if more than 1000 sequences found, but not too many more, warn the user 
+
+if sequences_found > 1000 & sequences_found < 2000	:
+	print("warning: more than 1000 sequences identifed, query may be too general"
+
+# if more than 2000 sequences found, tell the user to be more specific. request may be too general.
+
+if sequences_found >= 2000	:
+	print("To many sequences, exiting program")
+	# exit pipeline
+
+### search for protein sequences
+
+# big horrible looking command that is basically trying to make:
+# esearch -db protein -query "$protein AND $subgroup [ORGN]" |efetch -format fasta > "$subgroup"_"$protein".fasta
+# This can be used to get the desired protein sequences
+
+esearch_command = "esearch -db protein -query \"" + protein + " [PROTEIN] AND " + subgroup + " [ORGN]\" |efetch -format fasta >  temp/" + subgroup + "_" + protein + ".fasta"
+
+# run the command in python, check for errors
 try:
 	os.system(esearch_command)
 	subprocess.call(esearch_command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
