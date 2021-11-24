@@ -77,7 +77,6 @@ my_outfile_complete.close()
 ### need to check for species number and ask user if they want to check within or between species (why not both!)
 ### need to pass variables from one script to another
 
-
 # clustalo -i test.fasta -o aligned_test.fasta -v produces alignment file, can have set max number of sequences and max sequence length
 
 # clustalo --percent-id --full-iter -i test.fasta -o aligned_test.fasta -v --force --clustering-out=cluster.txt. percent id doesnt seem to do anything, cluster.txt is confusing 
