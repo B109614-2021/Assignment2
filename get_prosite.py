@@ -1,10 +1,12 @@
-#!/bin/bash
+#!/usr/local/bin/python3
 
 import string
 import sys
 import os
 import numpy as np
 import pandas as pd
+import mmap
+import re
 
 # run acommand via commandline to run a sequnece through PROSITE ie get  https://prosite.expasy.org/cgi-bin/prosite/PSScan.cgi?seq=P98073
 # can use sequence name to run it, which may be in the fasta file 
@@ -53,17 +55,33 @@ for sequence in sequence_data_list	:
 	# run patmatmotifs on temporary file 
 	os.system("patmatmotifs -sequence temp_patmat__sequences.fasta -rdirectory2 temp/motifs -auto")
 
-### check that values are expected for amino acids 
+### get motif counts 
 
+# use re.search('.* Motif = .', ) to find the motifs 
 
-### for each sequence header, provide a list of motifs identified for each sequence
+patmat_output_files = os.listdir('temp/motifs')
 
-# use patmatmotifs
-# currently only takes first sequence in the fasta file 
+# print(patmat_output_files)
 
-### make a barplot of some sort 
+# create an empty list to hold motifs 
 
+total_motifs = []
 
-# then grep for motifs, count up number of motifs and produce both a file showing what motifs occur on each sequence, and a bar plot of the most common.
+for file in patmat_output_files:
 
-# use os.system to run bash commandline commands
+	# recreate the whole file path
+	file_path = 'temp/motifs/' + file
+	with open(file_path, 'r') as my_file:
+		motif_data = my_file.read()
+	motif_data = motif_data.split("\n")
+	# read the whole file
+	for line in motif_data:
+#		print(line)
+		motif = re.findall('.*Motif = .*', line)
+#		print(motif) 
+		total_motifs.extend(motif)
+
+print(total_motifs)
+print(set(total_motifs))
+
+### make a summary file/plot
