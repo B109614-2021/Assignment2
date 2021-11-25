@@ -3,10 +3,8 @@
 import string
 import sys
 import os
-import numpy as np
-import pandas as pd
-import mmap
 import re
+import csv
 
 # run acommand via commandline to run a sequnece through PROSITE ie get  https://prosite.expasy.org/cgi-bin/prosite/PSScan.cgi?seq=P98073
 # can use sequence name to run it, which may be in the fasta file 
@@ -71,17 +69,36 @@ for file in patmat_output_files:
 
 	# recreate the whole file path
 	file_path = 'temp/motifs/' + file
+
 	with open(file_path, 'r') as my_file:
 		motif_data = my_file.read()
+
+	# split into lines 
 	motif_data = motif_data.split("\n")
-	# read the whole file
+	
+	# read the whole file line by line
 	for line in motif_data:
 #		print(line)
 		motif = re.findall('.*Motif = .*', line)
 #		print(motif) 
 		total_motifs.extend(motif)
 
-print(total_motifs)
-print(set(total_motifs))
+# print(total_motifs)
+# print(set(total_motifs))
+
+# want to make a csv file with motifs identifies and their numbers 
+
+with open('motif_summary.csv', 'w') as csvfile:
+	filewriter = csv.writer(csvfile)
+	filewriter.writerow(['Motif', 'Number of hits'])
+
+	# add a new row for each motif and trim 'Motif = ' from the front
+
+	for motif in set(total_motifs):
+		motif_trim = motif.replace("Motif = ", "")
+		filewriter.writerow([motif_trim, total_motifs.count(motif)])
+
 
 ### make a summary file/plot
+
+# potentiall make a bar chart plotting the different motifs and their occurances 
