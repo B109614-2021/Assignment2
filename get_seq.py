@@ -134,5 +134,26 @@ else	:
 
 ### list the species in the dataset 
 
+# open fasta file, get the the line that has description using re.findall
+# get the set of names
+# make a file that has the sequence ID and species
+
+all_species = []
+
+with open(input_file_name , 'r') as my_file:
+                file_data = my_file.read()
+
+        # split into lines
+        sequence_data = file_data.split("\n")
+
+        # read the whole file line by line
+        for line in sequence_data:
+#               print(line)
+		# extract the bit in brackets
+                species = re.findall('\[.*\]', line)
+#               print(species)
+                all_species.extend(species)
+
+
 
 ### other checks

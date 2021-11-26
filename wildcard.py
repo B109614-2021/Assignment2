@@ -5,6 +5,9 @@
 # plot and compare amino acid sequence/features. even if the underlying sequence is the same are the regions of hydrophobicity etc the same? Pepinfo or Pepwindow
 # make some sort of plot comaring regions and their charge, which is most common in each region?
 
+# pepwindow makes a hydropathy plot 
+# pepinfo checks for different peptide properties at each position. Could use to make my own hydropathy plot 
+
 # split into list for species, so get unique species names occuring in the list of lists, make a object for each species, containing all sequences
 
 # get R python, so can make a heat map
@@ -20,4 +23,5 @@ import numpy as np
 # need empty matrix that has the dimensions [n sequences:n sequences], to fill. likely need a counter for x and y positions
 # use the aligned fasta, as the sequneces have already been aligned to each other
 # to check, the diagonal should theoretically only contain the value 100, as comparing a sequence to itself
+
 
