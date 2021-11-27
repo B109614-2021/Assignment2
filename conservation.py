@@ -22,13 +22,10 @@ except IOError:
 	print('Error: ' + file + ' does not exist.' + ' Exiting pipeline.')
 	quit()
 
-# check that Amino acids match the amino acid codes. if any dont, then change to X
-# regular expressions, find amono acids that are not in the expected letters, change wrong letters to X
-# resave to new file, which is then used for clustalo for alignment and then checking which regions are conserved.
-
 # print(fasta_data)
 
 # print(type(fasta_data))
+
 # fasta_data is a string, split into a list where > occurs using .split, so each header and sequence is a different object
 
 fasta_data_list = fasta_data.split(">")
@@ -84,7 +81,8 @@ my_outfile_complete.close()
 # plotcon -sequences aligned_test.fasta -winsize 10 -graph svg. winsize 10 makes nicer looking graph than smaller numbers, but still contains information  
 
 # need to return to screen as well as an svg
-# add graph variables to make pretty 
+# add graph variables to make pretty
+ 
 # "-graph" associated qualifiers
 #   -gprompt            boolean    Graph prompting
 #   -gdesc              string     Graph description

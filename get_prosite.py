@@ -64,24 +64,50 @@ patmat_output_files = os.listdir('temp/motifs')
 # create an empty list to hold motifs 
 
 total_motifs = []
+id_motifs = {}
 
 for file in patmat_output_files:
 
+	print(file)
 	# recreate the whole file path
 	file_path = 'temp/motifs/' + file
+	file_id = file.replace('.patmatmotifs','')
 
 	with open(file_path, 'r') as my_file:
 		motif_data = my_file.read()
 
 	# split into lines 
 	motif_data = motif_data.split("\n")
-	
+	 
 	# read the whole file line by line
 	for line in motif_data:
 #		print(line)
 		motif = re.findall('.*Motif = .*', line)
 #		print(motif) 
 		total_motifs.extend(motif)
+		
+		if file_id in id_motifs:
+					
+			# make a dict, if the key already exists add to value
+			id_motifs[file_id] = id_motifs[file_id] + motif
+
+		else:
+
+			id_motifs[file_id] = motif
+	
+# print(id_motifs)
+
+# create a file listing the IDs and Motifs, currently has 'Motif =' before each detected motif 
+
+with open('id_motif.csv', 'w') as csvfile:
+	filewriter = csv.writer(csvfile)
+	filewriter.writerow(['Id', 'Motifs']) 
+	
+	# add the IDs and motifs to file
+	for ID in id_motifs.keys():
+		filewriter.writerow([ID, id_motifs[ID]])
+
+# next step, remove "Motif = " from each element
 
 # print(total_motifs)
 # print(set(total_motifs))

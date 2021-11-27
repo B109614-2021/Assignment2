@@ -8,9 +8,6 @@
 # pepwindow makes a hydropathy plot 
 # pepinfo checks for different peptide properties at each position. Could use to make my own hydropathy plot 
 
-# split into list for species, so get unique species names occuring in the list of lists, make a object for each species, containing all sequences
-
-# get R python, so can make a heat map
 # get numpy to make a matrix 
 import numpy as np
 
@@ -53,7 +50,9 @@ input_file = 'aligned_test.fasta'
 # take this similarity value and add to a matrix, for position seq, comparison seq
 
 
-### make a dendrogram out of sequence similarity 
+### make a dendrogram out of sequence similarity. could label with id, and then use ID_species.csv to colour by species. 
+
+# are sequences from the same species clustered? 
 
 
 # for each sequence, get its similarity score to other sequences in the group, add a row of percent similarity to sequences to a growing matrix
