@@ -1,13 +1,6 @@
 #!/usr/local/bin/python3
 
-### options:
-# calculate GC% 
-# plot and compare amino acid sequence/features. even if the underlying sequence is the same are the regions of hydrophobicity etc the same? Pepinfo or Pepwindow
-# make some sort of plot comaring regions and their charge, which is most common in each region?
-
-# pepwindow makes a hydropathy plot 
-# pepinfo checks for different peptide properties at each position. Could use to make my own hydropathy plot 
-
+### import all of the packages and files
 # get numpy to make a matrix 
 
 import numpy as np
@@ -16,21 +9,23 @@ import re
 import sys
 import subprocess
 import shutil
-
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.cluster.hierarchy import dendrogram, linkage
 
 aligned_input_file = 'aligned_test.fasta'
 
 with open(aligned_input_file , 'r') as my_file:
                 aligned_sequence_data = my_file.read()
 
-### get sequences 
+### get sequences from the file 
 
 # need to split aligned_test.fasta into a list of sequences, removing the header
 # split at <, readd <, remove lines starting with <?
 
 sequence_data = aligned_sequence_data.split('>')
 
-# create a dict to hold ids and sequences
+# create a dict to hold just ids and their matching sequences
 
 id_sequence = {}
 
@@ -48,19 +43,12 @@ for sequence in sequence_data:
 
 		# split into header and sequence, include ] to specify split at header
 		protein_sequence = sequence.split("]\n")
-		print(protein_sequence[1])
+		# print(protein_sequence[1])
 		
 		# save into a dict, with ID as the key 
 		id_sequence[id] = protein_sequence[1]
 
-print(id_sequence)
-
-# make a dict of ids and sequences 
-
-### build empty similarity matrix, should have the same length as there are sequences 
-
-# want a matrix labelled with IDs on the axi
-
+# print(id_sequence)
 
 ### function to calculate similarity score	
 
@@ -92,7 +80,7 @@ def cal_seq_sim(seq_of_interest, comparison):
 	# print(IDmatrix[0:len(myseqs),0:len(myseqs)])
 	# print("The similarity was",int((IDmatrix[0:int(len(myseqs)/2),int(len(myseqs)/2):len(myseqs)].diagonal().sum()/9)*100),"percent")
 
-# take this similarity value and add to a matrix, for position seq, comparison seq
+# take this similarity value and add to a dataframe, for position seq, comparison seq
 
 # test that the function works the same as the one in the lecture, returns 66 as expected
 # similarity = cal_seq_sim('ATTGTACGG','AATGAACCG')
@@ -100,19 +88,49 @@ def cal_seq_sim(seq_of_interest, comparison):
 
 ### get similarity values 
 
+sequence_ids = list(id_sequence.keys())
 
-### make a dendrogram out of sequence similarity. could label with id, and then use ID_species.csv to colour by species. 
+print(sequence_ids)
 
-# are sequences from the same species clustered? 
+headers = ['ID'] + sequence_ids
+
+df = pd.DataFrame(columns = headers)
+
+for key_of_interest in sequence_ids:
+	
+	# make a row for each key, comparing it to all the other keys 
+	print(key_of_interest)
+	similarity_list = [key_of_interest] 
+	
+	# calculate the similarity value for each sequence with 
+	for key_contrast in sequence_ids:
+	
+		# use premade function to calculate sequence similarities 
+		similarity_value = cal_seq_sim(id_sequence.get(key_of_interest), id_sequence.get(key_contrast))
+		similarity_list.append(similarity_value)
+	
+	# print(similarity_list)
+	df.loc[len(df)] = similarity_list
 
 
-# for each sequence, get its similarity score to other sequences in the group, add a row of percent similarity to sequences to a growing matrix
-# use these similarity scores to create a heat map
-# getting similarity scores matrixes is at the bottom of lecture 13 
+# print(df) dataframe has values of 100 on the diagonal. this is good and expected as the sequences are being compared with themselves on the diagonal 
 
-# need a for loop within a for loop. for each sequence in the list, get similarty score for each sequence
-# need empty matrix that has the dimensions [n sequences:n sequences], to fill. likely need a counter for x and y positions
-# use the aligned fasta, as the sequneces have already been aligned to each other
-# to check, the diagonal should theoretically only contain the value 100, as comparing a sequence to itself
+# set the index to the id so this can be used for labelling
+df = df.set_index('ID')
 
+# calculate which sequences are most related to each other by this magic function 
+Z = linkage(df, 'ward')
+
+# create the dendrogram
+dendrogram(Z, leaf_rotation=90, leaf_font_size=8, labels=df.index)
+
+# save the dendrogram 
+
+# plt.show()
+plt.savefig("output/sequence_similarity_tree.png",transparent=True)
+
+
+
+# save the dataframe used incase a user is interested 
+df.to_csv("temp/sequence_similarity_df.csv")
 
