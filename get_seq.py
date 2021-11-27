@@ -15,7 +15,8 @@ import shutil
 # remove relevant directories if they exist 
 
 try:
-    shutil.rmtree('temp')
+	shutil.rmtree('temp')
+	shutil.rmtree('output')
 except OSError as e:
         # it is likely that temp does not exist, so don't want error to break the pipeline
         print("Error: %s : %s" % ('temp', e.strerror)) 
@@ -23,6 +24,7 @@ except OSError as e:
 # create a directory to save temporary files in, so it is tidy and users can access different stages.
 
 os.mkdir('temp')
+os.mkdir('output')
 
 
 ### read in variables and test
@@ -61,6 +63,9 @@ con_window_size = input("please enter a desired window size for conservation plo
 
 while(type(con_window_size) != int or length(con_window_size < 1):
 	con_window_size = input("please enter an interger for the window size of the conservation plot:")
+
+# ask users whether they want to use, complete, partial, predicted or all sequences 
+
 
 # Tell the user what they are searching for so they can maybe spot spelling mistakes
 
@@ -134,26 +139,8 @@ else	:
 
 ### list the species in the dataset 
 
-# open fasta file, get the the line that has description using re.findall
-# get the set of names
-# make a file that has the sequence ID and species
-
-all_species = []
-
-with open(input_file_name , 'r') as my_file:
-                file_data = my_file.read()
-
-        # split into lines
-        sequence_data = file_data.split("\n")
-
-        # read the whole file line by line
-        for line in sequence_data:
-#               print(line)
-		# extract the bit in brackets
-                species = re.findall('\[.*\]', line)
-#               print(species)
-                all_species.extend(species)
-
-
+# call check_species.py
 
 ### other checks
+
+# call check_AA_sequence.py

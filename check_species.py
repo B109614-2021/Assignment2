@@ -25,7 +25,7 @@ sequence_data = file_data.split("\n")
 
 # read the whole file line by line
 for line in sequence_data:
-#	print(line)
+	# print(line)
         # extract the bit in brackets, corresponding to the species
 	species = re.findall('\[.*\]', line)
 #	print(species)
@@ -48,7 +48,7 @@ for species_identity in set(all_species):
 # remove the brackets and the >
 # save into a csv file
 
-with open('seq_id_species.csv', 'w') as csvfile:
+with open('output/seq_id_species.csv', 'w') as csvfile:
         filewriter = csv.writer(csvfile)
 
 	# create headers

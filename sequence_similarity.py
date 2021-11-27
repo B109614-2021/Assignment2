@@ -9,45 +9,96 @@
 # pepinfo checks for different peptide properties at each position. Could use to make my own hydropathy plot 
 
 # get numpy to make a matrix 
-import numpy as np
 
-input_file = 'aligned_test.fasta'
+import numpy as np
+import os
+import re
+import sys
+import subprocess
+import shutil
+
+
+aligned_input_file = 'aligned_test.fasta'
+
+with open(aligned_input_file , 'r') as my_file:
+                aligned_sequence_data = my_file.read()
 
 ### get sequences 
 
+# need to split aligned_test.fasta into a list of sequences, removing the header
+# split at <, readd <, remove lines starting with <?
+
+sequence_data = aligned_sequence_data.split('>')
+
+# create a dict to hold ids and sequences
+
+id_sequence = {}
+
+for sequence in sequence_data:
+	# print(sequence)
+	sequence = '>' + sequence
+	# extract the id and sequence for enteries that are longer then 1 (blank lines will become >, so have a length of 1)
+	if len(sequence) > 1:
+		# use the > to find the sequence is
+		id = re.findall(r'>\S*', sequence)
+		# print(id)
+		
+		# find all returns a list, take the first element, which will be the id, and remove the >
+		id = id[0].replace(">","")
+
+		# split into header and sequence, include ] to specify split at header
+		protein_sequence = sequence.split("]\n")
+		print(protein_sequence[1])
+		
+		# save into a dict, with ID as the key 
+		id_sequence[id] = protein_sequence[1]
+
+print(id_sequence)
+
+# make a dict of ids and sequences 
 
 ### build empty similarity matrix, should have the same length as there are sequences 
 
-
-### for loop of building a similarity score	
-
-# paste seq and comparison seq together
-
-# make empty matrix to calculate identity
-# IDmatrix = np.eye(len(myseqs),dtype=int)
-
-# make a counter for the sequence matrix 
-# xcounter=0
+# want a matrix labelled with IDs on the axi
 
 
-# create a matrix comparing the similarity between each base 
-# for xbase in myseqs :
-#    xcounter+=1
-#    ycounter=0
-#    for ybase in myseqs :
-#      ycounter+=1
-#      print(xcounter,ycounter,xbase,ybase)
-#      if ybase==xbase :
-#        IDmatrix[(xcounter-1),(ycounter-1)]=1
+### function to calculate similarity score	
 
-# print(IDmatrix[0:18,0:18])
+def cal_seq_sim(seq_of_interest, comparison):
+	
+	# paste seq and comparison seq together
+	myseqs = seq_of_interest + comparison
+	#print(myseqs)
+	
+	# make empty matrix to calculate identity
+	IDmatrix = np.eye(len(myseqs),dtype=int)
+	
+	# make a counter for the sequence matrix 
+	xcounter=0
+	
+	# create a matrix comparing the similarity between each base 
+	for xbase in myseqs :
+		xcounter+=1
+		ycounter=0
+		for ybase in myseqs :
+			ycounter+=1
+			# print(xcounter,ycounter,xbase,ybase)
+			if ybase==xbase :
+				IDmatrix[(xcounter-1),(ycounter-1)]=1
 
-# as using the aligned version, the sequences should have the same length. therefor take the diagonal from the halfway point
-# IDmatrix[0:9,9:18].diagonal()
+	# as using the aligned version, the sequences should have the same length. therefor take the diagonal from the halfway point
+	return(int(IDmatrix[0:int(len(myseqs)/2),int(len(myseqs)/2):len(myseqs)].diagonal().sum()/int(len(myseqs)/2)*100))
 
-# count the number of positives and divide by the length 
-# print("The similarity was",int((IDmatrix[0:9,9:18].diagonal().sum()/9)*100),"percent")
+	# print(IDmatrix[0:len(myseqs),0:len(myseqs)])
+	# print("The similarity was",int((IDmatrix[0:int(len(myseqs)/2),int(len(myseqs)/2):len(myseqs)].diagonal().sum()/9)*100),"percent")
+
 # take this similarity value and add to a matrix, for position seq, comparison seq
+
+# test that the function works the same as the one in the lecture, returns 66 as expected
+# similarity = cal_seq_sim('ATTGTACGG','AATGAACCG')
+# print(similarity)
+
+### get similarity values 
 
 
 ### make a dendrogram out of sequence similarity. could label with id, and then use ID_species.csv to colour by species. 
