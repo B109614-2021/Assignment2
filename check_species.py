@@ -11,6 +11,8 @@ import sys
 import subprocess
 import shutil
 
+print("Counting occurances of species")
+
 all_species = []
 all_seq_ids = []
 
@@ -72,4 +74,3 @@ with open('output/seq_id_species.csv', 'w') as csvfile:
 		filewriter.writerow([id_at_index, species_at_index])
 
 
-### ask user if they want to continue with current dataset

@@ -4,6 +4,7 @@ import string
 import sys
 import subprocess
 import os
+import shutil
 import re
 import pandas as pd
 import numpy as np
@@ -20,7 +21,9 @@ os.mkdir('temp/pepinfo/graphs')
 
 ### get input file
 
-input_file = "temp/complete_aligned.fasta"
+sequence_type = 'complete'
+
+input_file = "temp/" + sequence_type + "_aligned.fasta"
 #  "temp/" + sequence_type + "_sequences.fasta"
 
 try:
@@ -43,6 +46,8 @@ while("" in sequence_data_list) :
     sequence_data_list.remove("")
 
 # print(sequence_data_list)
+
+print("Running pepinfo on sequences")
 
 # get the length of the sequence, will use later for a dataframe
 max_seq_length = 0
@@ -87,11 +92,13 @@ patmat_output_files = os.listdir('temp/pepinfo/')
 # make a dataframe, want positon, n polar, n non-polar
 # make full of 0s and add to later
 
+print("Counting occurances of polar and non polar bases at each position and plotting")
+
 headers = ["position", "polar", "non-polar"]
 polarity = pd.DataFrame(0,index=np.arange(max_seq_length), columns=headers)
 polarity["position"] = np.arange(max_seq_length)
 
-print(polarity)
+# print(polarity)
 
 for file in patmat_output_files:
 	if '.pepinfo' not in file:
@@ -153,7 +160,8 @@ for file in patmat_output_files:
 
 # print(polarity)
 
-# make a bar plot showing regions of polar and non polar amino acids. As some sequences will not have amino acids at certain positions, the bars will not be of equal height  
+### make a bar plot showing regions of polar and non polar amino acids. As some sequences will not have amino acids at certain positions, the bars will not be of equal height  
+
 fig, ax = plt.subplots()
 
 ax.bar(polarity['position'], polarity['polar'], label='Polar')
@@ -164,8 +172,8 @@ ax.set_title('Metafeature plot of polatiry of bases along a metasequence')
 ax.legend()
 
 plt.savefig("output/metafeature_base_polarity.png",transparent=True, bbox_inches = 'tight', pad_inches=0.5)
-plt.show()
 
+### zip the pepinfo output files, so they are there but not taking up too much space
 
-### make a bar like graph showing the proporitiin of polar and nonpolar amino acids at each position 
+shutil.make_archive("temp/pepinfo", "zip", "temp/pepinfo")
 

@@ -55,7 +55,7 @@ for sequence in fasta_data_list :
 		# print("is a predicted sequence")
 		my_outfile_predicted.write(sequence)
 
-	elif:
+	else:
 		# print("is a complete sequnece")
 		my_outfile_complete.write(sequence)
 

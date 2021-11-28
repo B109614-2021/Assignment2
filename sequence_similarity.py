@@ -101,7 +101,7 @@ df = pd.DataFrame(columns = headers)
 for key_of_interest in sequence_ids:
 	
 	# make a row for each key, comparing it to all the other keys 
-	# print(key_of_interest)
+	print(key_of_interest)
 	similarity_list = [key_of_interest] 
 	
 	# calculate the similarity value for each sequence with 
@@ -120,6 +120,8 @@ for key_of_interest in sequence_ids:
 # set the index to the id so this can be used for labelling
 df = df.set_index('ID')
 
+print('Plotting dendrogram')
+
 # calculate which sequences are most related to each other by this magic function 
 Z = linkage(df, 'ward')
 
@@ -129,9 +131,7 @@ dendrogram(Z, leaf_rotation=90, leaf_font_size=8, labels=df.index)
 # save the dendrogram 
 
 plt.show()
-plt.savefig("output/sequence_similarity_tree.png",transparent=True, bbox_inches = 'tight', pad_inches=0.5)
-
-
+plt.savefig("output/sequence_similarity_tree.png",transparent=True, bbox_inches = 'tight', pad_inches=1)
 
 # save the dataframe used incase a user is interested 
 df.to_csv("temp/sequence_similarity_df.csv")

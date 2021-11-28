@@ -25,6 +25,7 @@ except IOError:
         print('Error: ' + file + ' does not exist.' + ' Exiting pipeline.')
         quit()
 
+print('Finding motifs using patmatmotifs')
 
 ### extract sequences
 
@@ -74,7 +75,7 @@ id_motifs = {}
 
 for file in patmat_output_files:
 
-	print(file)
+	# print(file)
 	# recreate the whole file path
 	file_path = 'temp/motifs/' + file
 	file_id = file.replace('.patmatmotifs','')
@@ -105,6 +106,8 @@ for file in patmat_output_files:
 
 # create a file listing the IDs and Motifs, currently has 'Motif =' before each detected motif 
 
+print('Creating summary files of identified motifs and sequences')
+
 with open('output/id_motif.csv', 'w') as csvfile:
 	filewriter = csv.writer(csvfile)
 	filewriter.writerow(['Id', 'Motifs']) 
@@ -131,6 +134,6 @@ with open('output/motif_summary.csv', 'w') as csvfile:
 		filewriter.writerow([motif_trim, total_motifs.count(motif)])
 
 
-### make a summary file/plot
+### zip the motif files
 
-# potentiall make a bar chart plotting the different motifs and their occurances 
+shutil.make_archive("temp/motifs", "zip", "temp/motifs")

@@ -12,9 +12,9 @@ import pandas as pd
 
 clustalo_command = "clustalo -i temp//" + sequence_type + "_sequences.fasta -o temp//" + sequence_type + "_aligned.fasta"
 
-print(clustalo_command)
+# print(clustalo_command)
 
-print("Calculating sequene conservation")
+print("Calculating sequence conservation")
 
 ### run clustalo
 
@@ -57,4 +57,4 @@ except OSError as e:
         print("Error: plotcon returned error")
         quit()
 
-print("plot conservation: Done")
+
