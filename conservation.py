@@ -8,60 +8,11 @@ import os
 import numpy as np
 import pandas as pd
 
-input_file = "temp/aves_glucose-6-phosphatase.fasta"
-
-# print(input_file)
-# check: does input file exist with try and except. if file does not exist, exit and return error. 
-
-try:
-	with open(input_file) as my_file:
-     		fasta_data = my_file.read()
-
-except IOError:
-
-	print('Error: ' + file + ' does not exist.' + ' Exiting pipeline.')
-	quit()
-
-# print(fasta_data)
-
-# print(type(fasta_data))
-
-# fasta_data is a string, split into a list where > occurs using .split, so each header and sequence is a different object
-
-fasta_data_list = fasta_data.split(">")
-
-# print(fasta_data_list)
-# need to re add ">" to the start of sequences 
+### use file_type to build up a command for clustalo
 
 
-### split into partial, predicted and full sequences
 
-# create new fasta files
-
-my_outfile_partial = open("partial_sequences.fasta", "w")
-my_outfile_predicted = open("predicted_sequences.fasta", "w")
-my_outfile_complete = open("complete_sequences.fasta", "w")
-
-for sequence in fasta_data_list	:
-	sequence.replace(">", "")
-	sequence = ">" + sequence
-	# print(sequence) 
-	if("partial" in sequence):
-	# 	print("is a partial sequence")
-		my_outfile_partial.write(sequence)
-	elif("PREDICTED" in sequence):
-	# 	print("is a predicted sequence")
-		my_outfile_predicted.write(sequence)
-
-	else:
-	#	print("is a complete sequnece")
-		my_outfile_complete.write(sequence)
-
-my_outfile_partial.close()
-my_outfile_predicted.close()
-my_outfile_complete.close()
-
-### desired file (likely complete) can be used for clustalo
+### run clustalo
 
 # use clustalo to align
 # plotcon can be used to plot the conservation
@@ -77,6 +28,9 @@ my_outfile_complete.close()
 # clustalo -i test.fasta -o aligned_test.fasta -v produces alignment file, can have set max number of sequences and max sequence length
 
 # clustalo --percent-id --full-iter -i test.fasta -o aligned_test.fasta -v --force --clustering-out=cluster.txt. percent id doesnt seem to do anything, cluster.txt is confusing 
+
+
+### run plotcon
 
 # plotcon -sequences aligned_test.fasta -winsize 10 -graph svg. winsize 10 makes nicer looking graph than smaller numbers, but still contains information  
 

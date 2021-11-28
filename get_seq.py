@@ -54,14 +54,21 @@ protein = input("please enter protein family of interest:")
 while(type(re.search(r'\D', protein)) != re.Match or len(protein) < 1)       :
         protein = input("variable protein must contain alphabetic characters, enter a protein family:")
 
-# get window size parameter for conservation as a variable, check it is a number, recommend 10
+# ask the user which sequences they want to use; partial, predicted, complete or all
 
+sequence_type = input("Which type of sequence would you like to use; partial, predicted, complete or all?:")
+sequence_type = sequence_type.lower().replace(" ","")
+
+while((sequence_type in ["all", "partial", "predicted", "complete"]) == False):
+	sequence_type = input("Please pick partial, predicted, complete or all:")
+
+# get window size parameter for conservation as a variable, check it is a number, recommend 10
 con_window_size = input("please enter a desired window size for conservation plot:")
 
 # check this is an int
 # keep harassing user until something is entered 
 
-while(type(con_window_size) != int or length(con_window_size < 1):
+while(type(re.search(r'\d', con_window_size)) != re.Match or type(re.search(r'\D', con_window_size)) == re.Match):
 	con_window_size = input("please enter an interger for the window size of the conservation plot:")
 
 # ask users whether they want to use, complete, partial, predicted or all sequences 
@@ -79,11 +86,11 @@ print("Searching for " + protein + " in " + subgroup )
 esearch_seq_number_command = "esearch -db protein -query \"" + protein + " [PROTEIN] AND " + subgroup + " [ORGN]\" |efetch -format uid | wc -l"
 
 try:
-        os.system(esearch_seq_number_command)
-        sequences_found = subprocess.check_output(esearch_seq_number_command, shell=True)
-except OSError as e:
-        # insert more descriptive error
-        print("Error: esearch returned error")
+	os.system(esearch_seq_number_command)
+	sequences_found = subprocess.check_output(esearch_seq_number_command, shell=True)
+except OSError as e: 
+	# insert more descriptive error
+	print("Error: esearch returned error")
 	quit()
 
 sequences_found = sequences_found.decode().replace("\n","")
@@ -121,7 +128,7 @@ try:
 	subprocess.call(esearch_command, shell=True)
 except OSError as e:
 	# insert more descriptive error
-        print("Error: esearch returned error")
+	print("Error: esearch returned error")
 	quit()
 
 # check if file is empty, indicating a problem with esearch, return an error is possible
@@ -137,10 +144,3 @@ else	:
 	print("Sequences downloaded") 
 
 
-### list the species in the dataset 
-
-# call check_species.py
-
-### other checks
-
-# call check_AA_sequence.py

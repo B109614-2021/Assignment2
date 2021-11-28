@@ -11,8 +11,6 @@ import sys
 import subprocess
 import shutil
 
-input_file_name = 'aves_glucose-6-phosphatase.fasta'
-
 all_species = []
 all_seq_ids = []
 
@@ -49,14 +47,14 @@ for species_identity in set(all_species):
 # save into a csv file
 
 with open('output/seq_id_species.csv', 'w') as csvfile:
-        filewriter = csv.writer(csvfile)
+	filewriter = csv.writer(csvfile)
 
 	# create headers
-        filewriter.writerow(['Sequence Id', 'Species'])
+	filewriter.writerow(['Sequence Id', 'Species'])
 
-        # add a new row for each motif and trim 'Motif = ' from the front
+	# add a new row for each motif and trim 'Motif = ' from the front
 
-        for index in range(len(all_seq_ids)):
+	for index in range(len(all_seq_ids)):
 		
 		# get id at the expected index. as matching ids and species were put in from the same line
 		# in the above loop they should have the same index 
@@ -71,7 +69,7 @@ with open('output/seq_id_species.csv', 'w') as csvfile:
 		species_at_index = species_at_index.replace("]", "")
 		
 		# write the trimmed versions into the csv file
-                filewriter.writerow([id_at_index, species_at_index])
+		filewriter.writerow([id_at_index, species_at_index])
 
 
 ### ask user if they want to continue with current dataset
