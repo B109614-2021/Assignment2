@@ -17,3 +17,12 @@ print(sequence_type)
 # split into partial, predicted and complete sequences, then calculate conservation 
 exec(open("split_into_sequence_type.py").read())
 
+# run clustalo with desired sequence_type
+exec(open("conservation.py").read())
+
+# run patmatmotifs to identify motifs
+exec(open("get_prosite.py").read())
+
+# create a dendrogram of sequence similarity 
+exec(open("sequence_similarity.py").read())
+

@@ -13,7 +13,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.cluster.hierarchy import dendrogram, linkage
 
-aligned_input_file = 'aligned_test.fasta'
+aligned_input_file = 'temp/' + sequence_type + "_aligned.fasta"
 
 with open(aligned_input_file , 'r') as my_file:
                 aligned_sequence_data = my_file.read()
@@ -126,8 +126,8 @@ dendrogram(Z, leaf_rotation=90, leaf_font_size=8, labels=df.index)
 
 # save the dendrogram 
 
-# plt.show()
-plt.savefig("output/sequence_similarity_tree.png",transparent=True)
+plt.show()
+plt.savefig("output/sequence_similarity_tree.png",transparent=True, bbox_inches = 'tight', pad_inches=0.5)
 
 
 

@@ -2,21 +2,19 @@
 
 import string
 import sys
+import subprocess
 import os
 import re
 import csv
 
-# run acommand via commandline to run a sequnece through PROSITE ie get  https://prosite.expasy.org/cgi-bin/prosite/PSScan.cgi?seq=P98073
-# can use sequence name to run it, which may be in the fasta file 
-# use command GET, with the url attached to it.
+# This script identifies motifs in the desired type sequence 
 
-### make directory to hold output
+### open file, give them the choice of partial, Predicted, complete or all
 
+# make a directory in temp to hold all the outputs of patmatmotifs
 os.mkdir('temp/motifs')
 
-### open file, give them the choice of partical, Predicted, complete or all
-
-input_file = "temp/aves_glucose-6-phosphatase.fasta"
+input_file = "temp/" + sequence_type + "_sequences.fasta"
 
 try:
         with open(input_file) as my_file:
@@ -46,12 +44,15 @@ for sequence in sequence_data_list	:
 	sequence = ">" + sequence
 
 	# save sequence in a temp file, this will be overwritten with each iteration
-	temp_patmat_input = open("temp_patmat__sequences.fasta", "w")
+	temp_patmat_input = open("temp/temp_patmat__sequences.fasta", "w")
 	temp_patmat_input.write(sequence)
 	temp_patmat_input.close()
 
-	# run patmatmotifs on temporary file 
-	os.system("patmatmotifs -sequence temp_patmat__sequences.fasta -rdirectory2 temp/motifs -auto")
+	# run patmatmotifs on temporary file, some may have 0 lengths if there were any blamk lines so catch errors and warnings
+	try:
+		os.system("patmatmotifs -sequence temp/temp_patmat__sequences.fasta -rdirectory2 temp/motifs -auto")
+	except:
+		pass
 
 ### get motif counts 
 
@@ -99,7 +100,7 @@ for file in patmat_output_files:
 
 # create a file listing the IDs and Motifs, currently has 'Motif =' before each detected motif 
 
-with open('id_motif.csv', 'w') as csvfile:
+with open('output/id_motif.csv', 'w') as csvfile:
 	filewriter = csv.writer(csvfile)
 	filewriter.writerow(['Id', 'Motifs']) 
 	
@@ -114,7 +115,7 @@ with open('id_motif.csv', 'w') as csvfile:
 
 # want to make a csv file with motifs identifies and their numbers 
 
-with open('motif_summary.csv', 'w') as csvfile:
+with open('output/motif_summary.csv', 'w') as csvfile:
 	filewriter = csv.writer(csvfile)
 	filewriter.writerow(['Motif', 'Number of hits'])
 
