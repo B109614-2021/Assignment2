@@ -104,6 +104,7 @@ for file in patmat_output_files:
 	if '.pepinfo' not in file:
 		continue	
 	file = "temp/pepinfo/" + file
+	print(file)
 	try:
 		with open(file) as my_file:
 			patmat_info = my_file.read()
@@ -114,7 +115,9 @@ for file in patmat_output_files:
 
 	# split where there are 4 X \n 
 	patmat_info_list = patmat_info.split("\n\n\n\n")
-	# print(patmat_info_list)
+	if len(patmat_info_list) = 0:
+		continue
+	print(patmat_info_list)
 	for dataframe in patmat_info_list:
 		if " Polar " in dataframe:
 			polar = dataframe
@@ -176,4 +179,12 @@ plt.savefig("output/metafeature_base_polarity.png",transparent=True, bbox_inches
 ### zip the pepinfo output files, so they are there but not taking up too much space
 
 shutil.make_archive("temp/pepinfo", "zip", "temp/pepinfo")
+
+### remove unzipped pepinfo
+
+try:
+        shutil.rmtree('temp/pepinfo')
+except OSError as e:
+        # it is likely that temp does not exist, so don't want error to break the pipeline
+        print("Error: %s : %s" % ('temp', e.strerror))
 

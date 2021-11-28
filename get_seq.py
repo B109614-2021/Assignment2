@@ -54,6 +54,7 @@ protein = input("please enter protein family of interest:")
 while(type(re.search(r'\D', protein)) != re.Match or len(protein) < 1)       :
         protein = input("variable protein must contain alphabetic characters, enter a protein family:")
 
+
 # ask the user which sequences they want to use; partial, predicted, complete or all
 
 sequence_type = input("Which type of sequence would you like to use; partial, predicted, complete or all?:")
@@ -120,7 +121,10 @@ if int(sequences_found) >= 1500:
 # esearch -db protein -query "$protein AND $subgroup [ORGN]" |efetch -format fasta > "$subgroup"_"$protein".fasta
 # This can be used to get the desired protein sequences
 
-esearch_command = "esearch -db protein -query \"" + protein + " [PROTEIN] AND " + subgroup + " [ORGN]\" |efetch -format fasta >  temp/" + subgroup + "_" + protein + ".fasta"
+input_file_name =  "temp/" + subgroup + "_" + protein + ".fasta"
+input_file_name = input_file_name.replace(" ", "-")
+
+esearch_command = "esearch -db protein -query \"" + protein + " [PROTEIN] AND " + subgroup + " [ORGN]\" |efetch -format fasta > " + input_file_name
 
 # run the command in python, check for errors
 try:
@@ -132,8 +136,6 @@ except OSError as e:
 	quit()
 
 # check if file is empty, indicating a problem with esearch, return an error is possible
-
-input_file_name =  "temp/" + subgroup + "_" + protein + ".fasta" 
 
 if os.stat(input_file_name).st_size == 0:
 	print("No sequences found for " + protein + " in " + subgroup)

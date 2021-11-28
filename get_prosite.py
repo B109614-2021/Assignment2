@@ -137,3 +137,15 @@ with open('output/motif_summary.csv', 'w') as csvfile:
 ### zip the motif files
 
 shutil.make_archive("temp/motifs", "zip", "temp/motifs")
+
+### remove non zipped files
+
+try:
+        shutil.rmtree('temp/motifs')
+except OSError as e:
+        # it is likely that temp does not exist, so don't want error to break the pipeline
+        print("Error: %s : %s" % ('temp', e.strerror))
+
+# remove temporary file
+os.remove('temp/temp_patmat__sequences.fasta')
+
