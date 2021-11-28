@@ -13,6 +13,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.cluster.hierarchy import dendrogram, linkage
 
+print("Calculating the similarity between sequences of the chosen type") 
+
 aligned_input_file = 'temp/' + sequence_type + "_aligned.fasta"
 
 with open(aligned_input_file , 'r') as my_file:
@@ -90,7 +92,7 @@ def cal_seq_sim(seq_of_interest, comparison):
 
 sequence_ids = list(id_sequence.keys())
 
-print(sequence_ids)
+# print(sequence_ids)
 
 headers = ['ID'] + sequence_ids
 
@@ -99,7 +101,7 @@ df = pd.DataFrame(columns = headers)
 for key_of_interest in sequence_ids:
 	
 	# make a row for each key, comparing it to all the other keys 
-	print(key_of_interest)
+	# print(key_of_interest)
 	similarity_list = [key_of_interest] 
 	
 	# calculate the similarity value for each sequence with 

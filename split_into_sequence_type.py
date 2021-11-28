@@ -40,23 +40,29 @@ print("Creating seperate files for complete, partial and predicted sequences")
 my_outfile_partial = open("temp/partial_sequences.fasta", "w")
 my_outfile_predicted = open("temp/predicted_sequences.fasta", "w")
 my_outfile_complete = open("temp/complete_sequences.fasta", "w")
+my_outfile_all = open("temp/all_sequences.fasta", "w")
 
 for sequence in fasta_data_list :
 	sequence.replace(">", "")
 	sequence = ">" + sequence
         # print(sequence)
+
 	if("partial" in sequence):
 		# print("is a partial sequence")
 		my_outfile_partial.write(sequence)
+
 	elif("PREDICTED" in sequence):
 		# print("is a predicted sequence")
 		my_outfile_predicted.write(sequence)
 
-	else:
+	elif:
 		# print("is a complete sequnece")
 		my_outfile_complete.write(sequence)
+
+	# save all sequences into one file
+	my_outfile_all.write(sequence)
 
 my_outfile_partial.close()
 my_outfile_predicted.close()
 my_outfile_complete.close()
-
+my_outfile_all.close()

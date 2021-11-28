@@ -38,6 +38,11 @@ sequence_data_list = sequence_data.split(">")
 # for each element, want to save it in a file, perform patmatmotifs analysis
 # copy output file output into a growing file which will contain patmatmotifs results for all sequences 
 
+# as there is > at the start, the list will have empty values, need to remove these
+
+while("" in sequence_data_list) :
+    sequence_data_list.remove("")
+
 for sequence in sequence_data_list	:
 	# read the ">" so fasta file works
 	sequence.replace(">", "")
