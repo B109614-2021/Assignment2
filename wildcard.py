@@ -8,6 +8,7 @@ import re
 import pandas as pd
 import numpy as np
 import csv
+import matplotlib.pyplot as plt
 
 # pepwindow makes a hydropathy plot for an individual sequence, not particularly helpful as I will potentialy have lots of sequences
 # pepinfo checks for different peptide properties at each position. Could use to make my own hydropathy plot 
@@ -15,6 +16,7 @@ import csv
 ### make directory to hold pepinfo outputs 
 
 os.mkdir('temp/pepinfo')
+os.mkdir('temp/pepinfo/graphs')
 
 ### get input file
 
@@ -67,7 +69,7 @@ for sequence in sequence_data_list      :
 	temp_patmat_input.write(sequence)
 	temp_patmat_input.close()
 	
-	pepinfo_command = "pepinfo -sequence temp/temp_patmat__sequences.fasta -odirectory2 temp/pepinfo -graph svg -goutfile " + id + " -gdirectory temp/pepinfo -auto"
+	pepinfo_command = "pepinfo -sequence temp/temp_patmat__sequences.fasta -odirectory2 temp/pepinfo -graph svg -goutfile " + id + " -gdirectory temp/pepinfo/graphs -auto"
 	
 	# run patmatmotifs on temporary file, some may have 0 lengths if there were any blamk lines so catch errors and warnings
 	try:
@@ -80,9 +82,7 @@ for sequence in sequence_data_list      :
 # read in file 
 # just want to focus on polar and non polar so extract dataframes with these
 
-patmat_output_files = ["temp/pepinfo/kaf4787459.pepinfo"]  
-
-# os.listdir('temp/pepinfo/*.pepinfo')
+patmat_output_files = os.listdir('temp/pepinfo/')
 
 # make a dataframe, want positon, n polar, n non-polar
 # make full of 0s and add to later
@@ -94,15 +94,17 @@ polarity["position"] = np.arange(max_seq_length)
 print(polarity)
 
 for file in patmat_output_files:
+	if '.pepinfo' not in file:
+		continue	
+	file = "temp/pepinfo/" + file
 	try:
 		with open(file) as my_file:
 			patmat_info = my_file.read()
 
 	except IOError:
-
 		print('Error: ' + file + ' does not exist.' + ' Exiting pipeline.')
-		quit()
-	
+		continue
+
 	# split where there are 4 X \n 
 	patmat_info_list = patmat_info.split("\n\n\n\n")
 	# print(patmat_info_list)
@@ -120,11 +122,50 @@ for file in patmat_output_files:
 	# remove the wordy bits
 	del polar_positions[0:3]
 	del non_polar_positions[0:3]
-	
-	# now just have a list, with each element having a position, an amino acid and a 1 or 0 for presence or absence of Amino acid type 
-	for position in polar_positions 
 		
-	print(polar_positions)
-	print(non_polar_positions)
+	# print(polar_positions)
+	# print(non_polar_positions)
+
+	# now just have a list, with each element having a position, an amino acid and a 1 or 0 for presence or absence of Amino acid type 
+	for p_position in polar_positions: 
+		
+		# remove white spaces
+		p_position = re.findall(r'\S*', p_position)
+		while("" in p_position) :
+			p_position.remove("")
+
+		# check if this position has a polar amino acid
+		if int(p_position[2]) == 1:
+			polarity.at[int(p_position[0]), 'polar'] = polarity.at[int(p_position[0]), 'polar'] +1
+		# print(p_position)
+
+	for np_position in non_polar_positions:
+
+		# remove the white space
+		np_position = re.findall(r'\S*', np_position)
+		while("" in np_position) :
+			np_position.remove("")
+
+		# check if this position has a non-polar amino acid
+		if int(np_position[2]) == 1:
+			polarity.at[int(np_position[0]), 'non-polar'] = polarity.at[int(np_position[0]), 'non-polar'] +1
+		# print(np_position)
+
+# print(polarity)
+
+# make a bar plot showing regions of polar and non polar amino acids. As some sequences will not have amino acids at certain positions, the bars will not be of equal height  
+fig, ax = plt.subplots()
+
+ax.bar(polarity['position'], polarity['polar'], label='Polar')
+ax.bar(polarity['position'], polarity['non-polar'], label='Non-Polar')
+
+ax.set_ylabel('Counts')
+ax.set_title('Metafeature plot of polatiry of bases along a metasequence')
+ax.legend()
+
+plt.savefig("output/metafeature_base_polarity.png",transparent=True, bbox_inches = 'tight', pad_inches=0.5)
+plt.show()
+
+
 ### make a bar like graph showing the proporitiin of polar and nonpolar amino acids at each position 
 
