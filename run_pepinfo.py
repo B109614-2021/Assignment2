@@ -104,7 +104,7 @@ for file in patmat_output_files:
 	if '.pepinfo' not in file:
 		continue	
 	file = "temp/pepinfo/" + file
-	print(file)
+	# print(file)
 	try:
 		with open(file) as my_file:
 			patmat_info = my_file.read()
@@ -113,11 +113,13 @@ for file in patmat_output_files:
 		print('Error: ' + file + ' does not exist.' + ' Exiting pipeline.')
 		continue
 
-	# split where there are 4 X \n 
+	# split where there are 4 X \n, which splits the dataframe in the .pepinfo files 
 	patmat_info_list = patmat_info.split("\n\n\n\n")
-	if len(patmat_info_list) = 0:
+	
+	# if the list has no entries, so if the file was somehow empty, go to the next itteration of the loop 
+	if len(patmat_info_list) == 0:
 		continue
-	print(patmat_info_list)
+	# print(patmat_info_list)
 	for dataframe in patmat_info_list:
 		if " Polar " in dataframe:
 			polar = dataframe

@@ -16,10 +16,15 @@ import shutil
 
 try:
 	shutil.rmtree('temp')
-	shutil.rmtree('output')
 except OSError as e:
         # it is likely that temp does not exist, so don't want error to break the pipeline
-        print("Error: %s : %s" % ('temp', e.strerror)) 
+        print("Error, cannot remove temp: %s : %s" % ('temp', e.strerror)) 
+
+try:
+        shutil.rmtree('output')
+except OSError as e:
+        # it is likely that temp does not exist, so don't want error to break the pipeline
+        print("Error, cannot remove output: %s : %s" % ('output', e.strerror))
 
 # create a directory to save temporary files in, so it is tidy and users can access different stages.
 
